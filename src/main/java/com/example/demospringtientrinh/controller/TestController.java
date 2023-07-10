@@ -29,8 +29,10 @@ public class TestController {
     private static final SimpleDateFormat dateformat = new SimpleDateFormat("HH:mm:ss");
     private boolean isRunning = true;
 
-
-
+    private double avgAllU = 0;
+    private double avgAllI = 0;
+    private double avgAllP = 0;
+    private int tongSo = 0;
     private static  int vitri = 0;
     @Scheduled(fixedRate = 500)
     public void tinhGiaTri(){
@@ -44,14 +46,19 @@ public class TestController {
            if(thongSoList.size() <= 0){
                isRunning = false;
                return;
+           } else {
+               isRunning = true;
            }
            for (ThongSo t : thongSoList){
                tongU += t.getVon();
                tongI += t.getAmpe();
                tongP += (t.getVon() * t.getAmpe());
            }
-           System.out.println(thongSoList.size());
-           luuTruResponesitory.save(new LuTru(null, dateformat.format(new Date()), tongU / thongSoList.size(), tongI/thongSoList.size(), tongP/thongSoList.size()));
+           avgAllU += tongU;
+           avgAllI += tongI;
+           avgAllP += tongP;
+           tongSo += thongSoList.size();
+           luuTruResponesitory.save(new LuTru(null, dateformat.format(new Date()), avgAllU/tongSo, avgAllI/tongSo, avgAllP/tongSo));
        }
     }
 
